@@ -1,6 +1,6 @@
 """
-NEO-CYBER CHRONOS // K-LSTM VAPOR-CORE 2006
-Interfaz Autónoma de Síntesis Literaria & Neuronal
+CYBER-VISTA 2006 // SYSTEM CORE: NEURAL-PULSE
+Plataforma de Creación e Inferencia de Textos LSTM
 """
 
 import streamlit as st
@@ -9,125 +9,112 @@ import json
 import time
 import os
 
-# Configuración de página con identidad Y2K / Cyber-Retro
 st.set_page_config(
-    page_title="CHRONOS-2006 // Neural Core",
+    page_title="CYBER-VISTA 2006 // NEURAL-PULSE",
     page_icon="⚡",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
-# ── Estilos CSS Radicales: Desestructurado, Y2K Cyber-Retro & Neoperreo Glow ─────
+# ── Estética Radical: Cyber-Y2K & Frutiger Aero (Reestructuración Total) ────────
 st.markdown("""
 <style>
-    /* Fondo con texturas e identidad cyberpunk / 2000s */
     .stApp {
-        background: linear-gradient(135deg, #0d0221 0%, #190535 35%, #0f172a 100%);
+        background: linear-gradient(135deg, #0a1128 0%, #1c3144 50%, #0077b6 100%);
         background-attachment: fixed;
     }
-
-    html, body, [class*="css"] {
-        font-family: 'Courier New', Courier, monospace;
-        color: #00ffcc;
-    }
-
-    /* Ocultar elementos estándar de Streamlit para cambiar la estructura por completo */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-
-    /* Contenedor tipo Terminal / Cyberdeck flotante */
-    .cyber-container {
-        background: rgba(15, 23, 42, 0.9);
-        border: 2px solid #ff007f;
-        border-radius: 4px;
-        padding: 25px;
-        box-shadow: 0 0 20px rgba(255, 0, 127, 0.4), inset 0 0 15px rgba(0, 255, 204, 0.2);
-        margin-bottom: 25px;
-    }
-
-    /* Cabecera Brutalista / Retro-Futurista */
-    .brutal-header {
-        background: linear-gradient(90deg, #ff007f, #7928ca, #0070f3);
-        padding: 4px;
-        border-radius: 6px;
-        margin-bottom: 25px;
-    }
     
-    .brutal-inner {
-        background: #09090b;
-        padding: 20px;
-        border-radius: 4px;
+    html, body, [class*="css"] {
+        font-family: 'Verdana', Geneva, sans-serif;
+        color: #e0fbfc;
+    }
+
+    /* Ocultar elementos estándar innecesarios y rediseñar cabecera absoluta */
+    header {visibility: hidden;}
+    
+    .hyper-header {
+        background: rgba(10, 25, 47, 0.85);
+        border: 2px solid #00f5d4;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 0 25px rgba(0, 245, 212, 0.4), inset 0 0 15px rgba(0, 245, 212, 0.2);
         text-align: center;
+        margin-bottom: 20px;
     }
 
-    .brutal-inner h1 {
+    .hyper-header h1 {
         font-family: 'Impact', sans-serif;
-        font-size: 2.8rem;
-        letter-spacing: 2px;
-        color: #ffffff;
-        text-shadow: 3px 3px #ff007f, -3px -3px #00ffcc;
-        margin: 0;
-    }
-
-    .brutal-inner p {
-        color: #00ffcc;
-        font-size: 0.95rem;
-        margin-top: 8px;
+        font-size: 3rem;
+        color: #00f5d4;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 2px;
+        margin: 0;
+        text-shadow: 2px 2px 0px #ff007f, 4px 4px 10px rgba(0,0,0,0.8);
     }
 
-    /* Pantalla de Texto Generado (Estilo CRT / Matrix / Cyberpunk) */
-    .crt-output {
-        background: #020617;
-        border: 2px solid #00ffcc;
-        border-radius: 6px;
+    .hyper-header p {
+        color: #98c1d9;
+        font-size: 1rem;
+        letter-spacing: 1px;
+        margin-top: 8px;
+    }
+
+    /* Paneles modulares flotantes estilo HUD futurista 2006 */
+    .hud-panel {
+        background: rgba(27, 38, 59, 0.75);
+        backdrop-filter: blur(12px);
+        border: 1px solid #3d5a80;
+        border-radius: 14px;
+        padding: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        margin-bottom: 15px;
+    }
+
+    .hud-panel h3 {
+        color: #ff007f;
+        font-size: 1.2rem;
+        border-bottom: 1px dashed #3d5a80;
+        padding-bottom: 6px;
+        margin-top: 0;
+    }
+
+    /* Caja de salida de texto estilo terminal / visor holográfico */
+    .terminal-output {
+        background: #020817;
+        border: 2px solid #00f5d4;
+        border-radius: 10px;
         padding: 20px;
         font-family: 'Courier New', monospace;
         font-size: 1.15rem;
-        line-height: 1.7;
-        color: #00ffcc;
-        box-shadow: inset 0 0 15px rgba(0, 255, 204, 0.3);
-        min-height: 180px;
-        text-shadow: 0 0 5px rgba(0, 255, 204, 0.5);
+        color: #00f5d4;
+        line-height: 1.6;
+        min-height: 220px;
+        box-shadow: inset 0 0 15px rgba(0, 245, 212, 0.2);
     }
 
-    /* Estilo para los botones */
-    .stButton > button {
-        background: linear-gradient(45deg, #ff007f, #7928ca);
+    /* Botones de acción total */
+    .stButton>button {
+        background: linear-gradient(90deg, #ff007f, #7209b7);
         color: white;
-        border: 2px solid #00ffcc;
-        font-family: 'Courier New', monospace;
+        border: 2px solid #f72585;
+        border-radius: 8px;
         font-weight: bold;
         text-transform: uppercase;
-        border-radius: 4px;
-        box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
-        transition: 0.2s ease;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 15px rgba(255, 0, 127, 0.4);
+        transition: 0.3s;
     }
     
-    .stButton > button:hover {
-        background: linear-gradient(45deg, #00ffcc, #0070f3);
-        color: #000;
-        border-color: #ff007f;
-    }
-
-    /* Insignias flotantes */
-    .cyber-badge {
-        display: inline-block;
-        background: #ff007f;
-        color: white;
-        padding: 3px 10px;
-        font-size: 0.75rem;
-        font-weight: bold;
-        text-transform: uppercase;
-        border: 1px solid #00ffcc;
-        box-shadow: 2px 2px 0px #00ffcc;
+    .stButton>button:hover {
+        background: linear-gradient(90deg, #7209b7, #00f5d4);
+        border-color: #00f5d4;
+        color: #020817;
     }
 </style>
 """, unsafe_allow_html=True)
 
 
-# ── Funciones de Carga y Procesamiento Neuronal ───────────────────────────────
+# ── Funciones de Procesamiento ────────────────────────────────────────────────
 
 @st.cache_resource
 def load_model_and_metadata(model_path, metadata_path):
@@ -187,150 +174,112 @@ def generate_full_text(model, seed_text, char_to_idx, idx_to_char,
     return generated
 
 
-# ── Sidebar Modificado Radicalmente ──────────────────────────────────────────
-with st.sidebar:
-    st.markdown("### 🔌 CHRONOS DECK // CONFIG")
-    st.markdown('<span class="cyber-badge">STATUS: ONLINE</span>', unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    st.markdown("#### [01] INGESTA DE PESOS")
-    model_file    = st.file_uploader("Archivo Binario (.keras / .h5)", type=["keras", "h5"])
-    metadata_file = st.file_uploader("Vocabulario JSON (.json)", type=["json"])
-
-    st.markdown("---")
-    st.markdown("#### [02] MATRIZ TÉRMICA")
-    temperature = st.slider(
-        "Nivel de Entropía (T)", min_value=0.1, max_value=2.0,
-        value=0.8, step=0.05
-    )
-    n_chars = st.slider("Longitud de Trama (Chars)", 50, 500, 200, 50)
-
-    st.markdown("---")
-    st.markdown("#### [03] BANCO DE SEMILLAS")
-    seeds = [
-        "en un lugar de la mancha",
-        "el caballero miro al horizonte",
-        "sancho panza respondio",
-        "con estas razones perdia",
-        "el hidalgo tomo la espada",
-    ]
-    selected_seed = st.selectbox("Semillas pre-cargadas:", ["(personalizada)"] + seeds)
-
-
-# ── Cabecera Principal Desestructurada ────────────────────────────────────────
+# ── Cabecera Única y Radical ──────────────────────────────────────────────────
 st.markdown("""
-<div class="brutal-header">
-    <div class="brutal-inner">
-        <h1>CHRONOS-LSTM // 2006 CORE</h1>
-        <p>[ SISTEMA AUTÓNOMO DE SÍNTESIS LITERARIA Y RECURRENCIA NEURONAL ]</p>
-    </div>
+<div class="hyper-header">
+    <h1>⚡ CYBER-VISTA 2006 // NEURAL-PULSE ⚡</h1>
+    <p>SISTEMA CENTRAL DE SÍNTESIS LITERARIA RECURRENTE (MOTOR LSTM v4.2)</p>
 </div>
 """, unsafe_allow_html=True)
 
 
-# ── Organización en una Interfaz de Flujo Único (Sin Tabs Tradicionales) ──────
+# ── Estructura de Control Unificada en Pantalla Principal (Sin Sidebar Tradicional) ──
+col_top1, col_top2, col_top3 = st.columns([1, 1, 1])
 
-st.markdown('<div class="cyber-container">', unsafe_allow_html=True)
-st.markdown("### ⚡ CONSOLA DE OPERACIÓN DE TEXTO")
+with col_top1:
+    st.markdown('<div class="hud-panel">', unsafe_allow_html=True)
+    st.markdown("### 📂 1. Ingesta de Núcleo")
+    mod_file = st.file_uploader("Modelo Neuronal (.keras / .h5)", type=["keras", "h5"])
+    meta_file = st.file_uploader("Metadatos de Vocabulario (.json)", type=["json"])
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# Distribución asimétrica de controles principales
-col_left, col_right = st.columns([1.2, 1.8], gap="large")
+with col_top2:
+    st.markdown('<div class="hud-panel">', unsafe_allow_html=True)
+    st.markdown("### 🎛️ 2. Parámetros Cuánticos")
+    temp_val = st.slider("Temperatura de Creatividad", 0.1, 2.0, 0.8, 0.05)
+    length_val = st.slider("Caracteres de Salida", 50, 400, 200, 50)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-with col_left:
-    st.markdown("#### ⚙️ Parámetros de Entrada")
-    default_text = selected_seed if selected_seed != "(personalizada)" else ""
-    seed_input = st.text_area(
-        "Inyección de Semilla Inicial:",
-        value=default_text, height=140,
-        placeholder="Escribe la frase base..."
-    )
-    
-    execute_btn = st.execute_btn = st.button("🚀 EJECUTAR SECUENCIA NEURONAL", use_container_width=True)
-    
-    if model_file and metadata_file:
-        st.success("STATUS: Modelo conectado externamente.")
-    else:
-        st.warning("STATUS: Modo Simulación Activa (Carga archivos en el sidebar).")
+with col_top3:
+    st.markdown('<div class="hud-panel">', unsafe_allow_html=True)
+    st.markdown("### 🌱 3. Semilla de Arranque")
+    preset_seeds = [
+        "en un lugar de la mancha",
+        "el caballero miro al horizonte",
+        "sancho panza respondio",
+        "el hidalgo tomo la espada"
+    ]
+    chosen_seed = st.selectbox("Banco de frases:", ["(Personalizada)"] + preset_seeds)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-with col_right:
-    st.markdown("#### 📺 Monitor CRT de Salida")
-    terminal_output = st.empty()
-    terminal_output.markdown(
-        '<div class="crt-output">> Sistema en espera de estímulo... Ingrese texto semilla e inicie la secuencia.</div>',
+
+# ── Área de Interacción Dinámica Central ──────────────────────────────────────
+st.markdown('<div class="hud-panel">', unsafe_allow_html=True)
+c_left, c_right = st.columns([1, 1], gap="large")
+
+with c_left:
+    st.markdown("### ✍️ Consola de Entrada de Texto")
+    default_text = chosen_seed if chosen_seed != "(Personalizada)" else ""
+    user_seed = st.text_area("Escribe tu premisa literaria:", value=default_text, height=140)
+    trigger_gen = st.button("🚀 DISPARAR INFERENCIA NEURONAL", use_container_width=True)
+
+with c_right:
+    st.markdown("### 🖥️ Visor de Resultados Holográfico")
+    visor_slot = st.empty()
+    visor_slot.markdown(
+        '<div class="terminal-output">> [SISTEMA EN ESPERA DE COMANDO...] <br>> Ingrese parámetros y ejecute el núcleo para iniciar la secuencia.</div>',
         unsafe_allow_html=True
     )
 
-if execute_btn:
-    if not seed_input.strip():
-        st.error("ERROR: El búfer de semilla está vacío.")
-    elif model_file and metadata_file:
-        ext = "keras" if model_file.name.endswith(".keras") else "h5"
+if trigger_gen:
+    if not user_seed.strip():
+        st.error("⚠️ ERROR: La semilla de entrada no puede estar vacía.")
+    elif mod_file and meta_file:
+        ext = "keras" if mod_file.name.endswith(".keras") else "h5"
         with open(f"/tmp/model.{ext}", "wb") as f:
-            f.write(model_file.read())
+            f.write(mod_file.read())
         with open("/tmp/metadata.json", "wb") as f:
-            f.write(metadata_file.read())
+            f.write(meta_file.read())
 
-        model, meta, err = load_model_and_metadata(f"/tmp/model.{ext}", "/tmp/metadata.json")
+        net_model, metadata_content, load_err = load_model_and_metadata(f"/tmp/model.{ext}", "/tmp/metadata.json")
 
-        if err:
-            st.error(f"Fallo crítico al compilar: {err}")
+        if load_err:
+            st.error(f"Error crítico en el modelo: {load_err}")
         else:
-            with st.spinner("PROCESANDO TENSORES..."):
-                generated = generate_full_text(
-                    model, seed_input,
-                    meta["char_to_idx"], meta["idx_to_char"],
-                    meta["seq_length"], meta["vocab_size"],
-                    n_chars, temperature
+            with st.spinner("⚡ Procesando tensores de red recurrente..."):
+                final_output = generate_full_text(
+                    net_model, user_seed,
+                    metadata_content["char_to_idx"], metadata_content["idx_to_char"],
+                    metadata_content["seq_length"], metadata_content["vocab_size"],
+                    length_val, temp_val
                 )
-            terminal_output.markdown(
-                f'<div class="crt-output">{generated}</div>',
-                unsafe_allow_html=True
-            )
+            visor_slot.markdown(f'<div class="terminal-output">{final_output}</div>', unsafe_allow_html=True)
     else:
-        with st.spinner("SIMULANDO NÚCLEO..."):
+        with st.spinner("⚡ Simulando flujo de red neuronal 2006..."):
             time.sleep(0.4)
-        simulations = {
-            0.3: "en un lugar de la mancha de cuyo nombre no quiero acordarme no ha mucho tiempo que vivia un hidalgo de la mancha con adarga antigua",
-            0.8: "en un lugar de la mancha donde el viento golpea las rocas antiguas y el caballero levanta su espada hacia un cielo eléctrico",
-            1.5: "en un lugar de la mancha xilofon cibernetico cruzo dimensiones paralelas mientras los molinos escupían codigo binario",
+        sim_data = {
+            0.3: "en un lugar de la mancha de cuyo nombre no quiero acordarme no ha mucho tiempo que vivia un hidalgo de los de lanza en astillero",
+            0.8: "en un lugar de la mancha donde el sol calienta los campos de batalla el caballero alzo su espada mirando el horizonte infinito",
+            1.5: "en un lugar de la mancha xilofon cosmico navego velozmente hacia las altas cumbres de la fantasia digital"
         }
-        closest_t = min(simulations.keys(), key=lambda k: abs(k - temperature))
-        terminal_output.markdown(
-            f'<div class="crt-output">{simulations[closest_t]}</div>',
-            unsafe_allow_html=True
-        )
+        matched_key = min(sim_data.keys(), key=lambda k: abs(k - temp_val))
+        visor_slot.markdown(f'<div class="terminal-output">{sim_data[matched_key]}</div>', unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
 
 
-# ── Sección Inferior: Módulos de Información Desplegados ──────────────────────
-col_sec1, col_sec2 = st.columns(2, gap="large")
+# ── Bloque Informativo Inferior (Sección de Documentación Interactiva) ──────────
+st.markdown('<div class="hud-panel">', unsafe_allow_html=True)
+st.markdown("### 📊 TELEMETRÍA Y ARQUITECTURA DEL SISTEMA")
+tab_a, tab_b, tab_c = st.tabs(["🧠 ¿Qué es una RNN?", "⚙️ Ventajas LSTM", "🌡️ Control de Temperatura"])
 
-with col_sec1:
-    st.markdown('<div class="cyber-container">', unsafe_allow_html=True)
-    st.markdown("### 📊 DIAGNÓSTICO DE RED")
-    st.markdown("""
-    * **Arquitectura:** Red Neuronal Recurrente (LSTM)
-    * **Objetivo:** Predicción probabilística caracter a caracter ($P(s_{t} | s_{t-1})$).
-    * **Optimización:** Entrenada para capturar dependencias de largo plazo evitando el desvanecimiento del gradiente.
-    """)
-    st.markdown('</div>', unsafe_allow_html=True)
+with tab_a:
+    st.markdown("Las Redes Neuronales Recurrentes (RNN) permiten procesar secuencias de datos manteniendo un ciclo de retroalimentación en su estado oculto, ideal para modelar lenguaje natural.")
 
-with col_sec2:
-    st.markdown('<div class="cyber-container">', unsafe_allow_html=True)
-    st.markdown("### 🎛️ CONTROL DE TEMPERATURA")
-    st.markdown("""
-    * **T Baja (< 0.5):** Comportamiento determinista, repetitivo y sumamente lógico.
-    * **T Media (0.8 - 1.0):** Balance dinámico ideal para narrativa fluida.
-    * **T Alta (> 1.2):** Alta entropía, generación experimental y alucinación creativa pura.
-    """)
-    st.markdown('</div>', unsafe_allow_html=True)
+with tab_b:
+    st.markdown("Las celdas LSTM resuelven el problema del desvanecimiento del gradiente mediante tres compuertas lógicas especializadas (Olvido, Entrada y Salida), permitiendo retener dependencias a largo plazo.")
 
-# Pie terminal definitivo
-st.markdown("<br>", unsafe_allow_html=True)
-st.markdown(
-    "<div style='text-align: center; color: #ff007f; font-family: Courier New; font-size: 0.8rem;'>"
-    "// CHRONOS-2006 // INTERFAZ MULTIMODAL Y AGENTES DE IA // STREAMLIT DEPLOY //"
-    "</div>",
-    unsafe_allow_html=True
-)
+with tab_c:
+    st.markdown("La temperatura altera la distribución de probabilidad de la capa softmax. Valores bajos generan respuestas conservadoras y lógicas; valores altos potencian la creatividad caótica.")
+
+st.markdown('</div>', unsafe_allow_html=True)
