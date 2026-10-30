@@ -1,6 +1,6 @@
 """
-Generador de Texto con LSTM
-Aplicacion Streamlit - Curso Agentes de IA e Interfaces Multimodales
+AeroQuill™ - Neural Scriptor Studio 2006
+Aplicación Streamlit - Estética Frutiger Aero / Y2K
 """
 
 import streamlit as st
@@ -10,36 +10,89 @@ import time
 import os
 
 st.set_page_config(
-    page_title="Generador LSTM",
-    page_icon="🧠",
+    page_title="AeroQuill™ Studio 2006",
+    page_icon="🌍",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
+# ── Estilos Frutiger Aero / Y2K ────────────────────────────────────────────────
 st.markdown("""
 <style>
+    /* Fondo general estilo Windows Vista / Aero */
+    .stApp {
+        background: radial-gradient(circle at 50% 0%, #a1c4fd 0%, #c2e9fb 50%, #d4fc79 100%);
+        background-attachment: fixed;
+    }
+
+    /* Contenedores translúcidos tipo Glassmorphism / Aero */
+    div.stMarkdown, .css-1r6slb0, div[data-testid="stVerticalBlock"] > div {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Título principal con estilo brillante de los 2000 */
     .main-title {
-        font-size: 2.2rem; font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        font-size: 2.8rem; 
+        font-weight: 800;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', sans-serif;
+        background: linear-gradient(180deg, #ffffff 0%, #2b74e4 50%, #003366 100%);
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        text-align: center;
+        margin-bottom: 0px;
     }
-    .subtitle { color: #6c757d; font-size: 1rem; }
+    
+    .subtitle { 
+        color: #002b49; 
+        font-size: 1.1rem; 
+        text-align: center;
+        font-weight: bold;
+        text-shadow: 0px 1px 1px rgba(255,255,255,0.8);
+        margin-bottom: 2rem;
+    }
+
+    /* Cajas de texto generado con estilo de burbuja brillante */
     .generated-text {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        border-radius: 12px; padding: 1.5rem;
-        font-family: Georgia, serif; font-size: 1.05rem;
-        line-height: 1.8; color: #2c3e50;
-        border-left: 5px solid #667eea; min-height: 120px;
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 16px; 
+        padding: 1.8rem;
+        font-family: 'Georgia', serif; 
+        font-size: 1.1rem;
+        line-height: 1.8; 
+        color: #1a252c;
+        border: 2px solid #ffffff;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.8);
+        min-height: 140px;
     }
+
+    /* Cajas informativas estilo retro-futurista */
     .info-box {
-        background: #e8f4f8; border-radius: 8px; padding: 1rem;
-        border: 1px solid #bee3f8; font-size: 0.9rem;
+        background: linear-gradient(135deg, rgba(230,244,255,0.9) 0%, rgba(190,227,248,0.9) 100%);
+        border-radius: 12px; 
+        padding: 1.2rem;
+        border: 1px solid #7cb9e8;
+        font-size: 0.9rem;
+        color: #003366;
+        box-shadow: inset 0 1px 3px rgba(255,255,255,0.8);
+    }
+    
+    .badge-y2k {
+        display: inline-block;
+        background: linear-gradient(90deg, #00c6ff, #0072ff);
+        color: white;
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 </style>
 """, unsafe_allow_html=True)
 
 
-# ── Funciones ─────────────────────────────────────────────────────────────────
+# ── Funciones de Carga y Generación ───────────────────────────────────────────
 
 @st.cache_resource
 def load_model_and_metadata(model_path, metadata_path):
@@ -56,7 +109,6 @@ def load_model_and_metadata(model_path, metadata_path):
 
 
 def is_embedding_model(model):
-    """Detecta si el modelo usa Embedding (nuevo) o entrada normalizada (viejo)."""
     first = model.layers[0]
     return hasattr(first, "input_dim") or first.__class__.__name__ == "Embedding"
 
@@ -100,38 +152,39 @@ def generate_full_text(model, seed_text, char_to_idx, idx_to_char,
     return generated
 
 
-# ── Sidebar ───────────────────────────────────────────────────────────────────
+# ── Sidebar Estilo Panel de Control 2006 ──────────────────────────────────────
 
 with st.sidebar:
-    st.markdown("## Configuracion")
+    st.markdown("### 🖥️ AeroQuill Control Center")
+    st.markdown('<span class="badge-y2k">Vista v2.06 Edición</span>', unsafe_allow_html=True)
     st.markdown("---")
-    st.markdown("### Cargar Modelo")
-
-    model_file    = st.file_uploader("Modelo (.keras o .h5)", type=["keras", "h5"])
-    metadata_file = st.file_uploader("Metadatos (.json)",    type=["json"])
+    
+    st.markdown("#### 📂 Carga de Núcleo (Modelo)")
+    model_file    = st.file_uploader("Archivo de red (.keras / .h5)", type=["keras", "h5"])
+    metadata_file = st.file_uploader("Metadatos neuronales (.json)", type=["json"])
 
     st.markdown("---")
-    st.markdown("### Parametros de Generacion")
+    st.markdown("#### 🎛️ Motor de Temperatura")
 
     temperature = st.slider(
-        "Temperatura", min_value=0.1, max_value=2.0,
+        "Nivel de Creatividad (T)", min_value=0.1, max_value=2.0,
         value=0.8, step=0.05,
-        help="Bajo = conservador | Alto = creativo/caotico"
+        help="Frío = Lógico y conservador | Caliente = Innovador y caótico"
     )
 
     if temperature < 0.5:
-        st.caption("Frio: texto conservador y repetitivo")
+        st.caption("🧊 Modo Frío: Coherente, estructurado, repetitivo.")
     elif temperature < 1.0:
-        st.caption("Templado: balance coherencia / variedad")
+        st.caption("💧 Modo Templado: Óptimo balance natural.")
     elif temperature < 1.4:
-        st.caption("Caliente: texto mas creativo")
+        st.caption("🌿 Modo Cálido: Alta inventiva literaria.")
     else:
-        st.caption("Muy caliente: puede inventar palabras")
+        st.caption("🔥 Modo Caótico: Generación experimental pura.")
 
-    n_chars = st.slider("Longitud del texto", 50, 500, 200, 50)
+    n_chars = st.slider("Longitud de salida (Caracteres)", 50, 500, 200, 50)
 
     st.markdown("---")
-    st.markdown("### Semillas predefinidas")
+    st.markdown("#### 🌱 Semillas Históricas")
     seeds = [
         "en un lugar de la mancha",
         "el caballero miro al horizonte",
@@ -139,56 +192,61 @@ with st.sidebar:
         "con estas razones perdia",
         "el hidalgo tomo la espada",
     ]
-    selected_seed = st.selectbox("Elige una semilla:", ["(personalizada)"] + seeds)
+    selected_seed = st.selectbox("Banco de frases precargadas:", ["(personalizada)"] + seeds)
 
     st.markdown("---")
     st.markdown("""<div class="info-box">
-    Modelo LSTM entrenado caracter a caracter con el <b>Quijote</b>.
-    Genera texto aprendiendo P(siguiente_char | contexto_previo).
+    <b>Estado del Sistema:</b> Red LSTM entrenada con textos clásicos del Quijote. Optimizada para entornos de escritorio virtuales y web de alta velocidad.
     </div>""", unsafe_allow_html=True)
 
 
-# ── Main ──────────────────────────────────────────────────────────────────────
+# ── Main / Interfaz Principal ─────────────────────────────────────────────────
 
-st.markdown('<h1 class="main-title">Generador de Texto LSTM</h1>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">Redes Neuronales Recurrentes · Agentes de IA e Interfaces Multimodales</p>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-title">AeroQuill™ Studio</h1>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle">Neural Scriptor & Text Synthesis Suite · Frutiger Aero Experience</p>', unsafe_allow_html=True)
 st.markdown("---")
 
-tab1, tab2, tab3 = st.tabs(["Generar Texto", "Explorar Temperatura", "Teoria"])
+# Banner decorativo tipo panel retro de bienvenida
+col_banner1, col_banner2, col_banner3 = st.columns(3)
+col_banner1.metric("Entorno Gráfico", "AeroGlass™", "Activo")
+col_banner2.metric("Motor Neuronal", "LSTM Recurrente", "v1.4")
+col_banner3.metric("Conectividad Cloud", "Streamlit Hub", "Estable")
+
+st.markdown("---")
+
+tab1, tab2, tab3 = st.tabs(["✨ Estación de Escritura", "🌡️ Comparativa Térmica", "📜 Biblioteca Teórica"])
 
 # ── Tab 1: Generar ────────────────────────────────────────────────────────────
 with tab1:
     col1, col2 = st.columns([1, 1], gap="large")
 
     with col1:
-        st.markdown("### Texto Semilla")
+        st.markdown("### ✍️ Panel de Entrada Semilla")
         default = selected_seed if selected_seed != "(personalizada)" else ""
         seed_input = st.text_area(
-            "Escribe el inicio del texto:",
-            value=default, height=100,
+            "Escribe o selecciona tu inspiración inicial:",
+            value=default, height=120,
             placeholder="Ejemplo: en un lugar de la mancha...",
         )
-        gen_btn = st.button("Generar Texto", type="primary", use_container_width=True)
+        gen_btn = st.button("🚀 Iniciar Síntesis Neuronal", type="primary", use_container_width=True)
 
         if model_file and metadata_file:
-            st.success("Modelo cargado correctamente")
+            st.success("✔ Conectado a archivos de modelo personalizados.")
         else:
-            st.warning("Sube tu modelo (.keras) y metadatos (.json) para generacion real. "
-                       "Sin ellos se mostrara modo demo.")
+            st.warning("⚠️ Sin archivos subidos: El sistema operará en **Modo Demostración Simulada**.")
 
     with col2:
-        st.markdown("### Texto Generado")
+        st.markdown("### 🖥️ Pantalla de Salida")
         output = st.empty()
         output.markdown(
-            '<div class="generated-text"><em style="color:#aaa">El texto aparecera aqui...</em></div>',
+            '<div class="generated-text"><em style="color:#789">Esperando señal de procesamiento... Ingrese su semilla y presione iniciar.</em></div>',
             unsafe_allow_html=True
         )
 
     if gen_btn:
         if not seed_input.strip():
-            st.error("Escribe un texto semilla")
+            st.error("⚠️ Error de sintaxis: Por favor escriba un texto semilla válido.")
         elif model_file and metadata_file:
-            # Guardar archivos temporalmente
             ext = "keras" if model_file.name.endswith(".keras") else "h5"
             with open(f"/tmp/model.{ext}", "wb") as f:
                 f.write(model_file.read())
@@ -198,14 +256,14 @@ with tab1:
             model, meta, err = load_model_and_metadata(f"/tmp/model.{ext}", "/tmp/metadata.json")
 
             if err:
-                st.error(f"Error al cargar modelo: {err}")
+                st.error(f"Error crítico al cargar el modelo: {err}")
             else:
                 char_to_idx = meta["char_to_idx"]
                 idx_to_char = meta["idx_to_char"]
                 vocab_size  = meta["vocab_size"]
                 seq_length  = meta["seq_length"]
 
-                with st.spinner("Generando..."):
+                with st.spinner("🔄 Procesando secuencias neuronales en la nube..."):
                     texto = generate_full_text(
                         model, seed_input,
                         char_to_idx, idx_to_char,
@@ -218,12 +276,13 @@ with tab1:
                 )
 
                 m1, m2, m3 = st.columns(3)
-                m1.metric("Caracteres generados", len(texto))
+                m1.metric("Caracteres", len(texto))
                 m2.metric("Temperatura", f"{temperature:.2f}")
-                m3.metric("Palabras aprox.", len(texto.split()))
+                m3.metric("Palabras Est.", len(texto.split()))
         else:
-            # Demo sin modelo
-            st.info("Modo Demo - carga tu modelo para generacion real")
+            # Demo interactiva sin modelo
+            with st.spinner("🔄 Simulando red neuronal de época..."):
+                time.sleep(0.6)
             demos = {
                 0.3: "en un lugar de la mancha de cuyo nombre no quiero acordarme no ha mucho tiempo que vivia un hidalgo de la mancha",
                 0.8: "en un lugar de la mancha donde el sol caia sobre las piedras del camino el caballero alzo su espada y miro al horizonte",
@@ -238,18 +297,17 @@ with tab1:
 
 # ── Tab 2: Comparar temperaturas ──────────────────────────────────────────────
 with tab2:
-    st.markdown("### Comparacion de Temperaturas")
-    st.markdown("Genera el mismo texto con 5 temperaturas distintas para ver el efecto.")
+    st.markdown("### 🌡️ Laboratorio de Espectro Térmico")
+    st.markdown("Analiza cómo reacciona la creatividad del núcleo ante diferentes niveles de temperatura simultáneamente.")
 
-    compare_seed = st.text_input("Semilla:", value="en un lugar de la mancha de cuyo nombre")
-    n_cmp = st.slider("Longitud", 50, 200, 100, key="ncmp")
-    cmp_btn = st.button("Comparar", type="primary")
+    compare_seed = st.text_input("Frase base para comparativa:", value="en un lugar de la mancha de cuyo nombre")
+    n_cmp = st.slider("Longitud de muestra", 50, 200, 100, key="ncmp")
+    cmp_btn = st.button("⚡ Ejecutar Comparativa Global", type="primary")
 
     if cmp_btn and model_file and metadata_file:
         ext = "keras" if model_file.name.endswith(".keras") else "h5"
         with open(f"/tmp/model.{ext}", "wb") as f:
-            f.write(model_file.getvalue()
-        )
+            f.write(model_file.getvalue())
         with open("/tmp/metadata.json", "wb") as f:
             f.write(metadata_file.getvalue())
 
@@ -258,9 +316,9 @@ with tab2:
         if model and meta:
             temps = [0.3, 0.6, 0.9, 1.2, 1.5]
             cols  = st.columns(len(temps))
-            labels = ["Frio", "Templado bajo", "Templado alto", "Caliente", "Muy caliente"]
+            labels = ["Frío", "Templado 1", "Templado 2", "Caliente", "Extremo"]
 
-            with st.spinner("Generando comparacion..."):
+            with st.spinner("Generando matriz de muestras..."):
                 for col, temp, label in zip(cols, temps, labels):
                     text = generate_full_text(
                         model, compare_seed,
@@ -269,65 +327,19 @@ with tab2:
                         n_cmp, temp
                     )
                     with col:
-                        hue = int(240 - temps.index(temp) * 40)
-                        st.markdown(f"**T={temp} — {label}**")
+                        st.markdown(f"**T={temp} ({label})**")
                         st.markdown(
-                            f'<div style="background:#f8f9fa; border-radius:8px; padding:0.8rem; font-family:Georgia,serif; font-size:0.85rem; line-height:1.6; min-height:150px; border-top:3px solid hsl({hue},70%,55%);">{text}</div>',
+                            f'<div style="background:rgba(255,255,255,0.9); border-radius:10px; padding:0.8rem; font-family:Georgia,serif; font-size:0.85rem; line-height:1.6; min-height:160px; border-top:4px solid #0072ff; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">{text}</div>',
                             unsafe_allow_html=True
                         )
     elif cmp_btn:
-        st.warning("Necesitas cargar un modelo. Sube .keras y .json en el sidebar.")
+        st.warning("⚠️ Carga tus archivos de modelo en el panel izquierdo para habilitar la comparativa real.")
 
 
 # ── Tab 3: Teoria ─────────────────────────────────────────────────────────────
 with tab3:
-    st.markdown("### Fundamentos Teoricos")
+    st.markdown("### 📚 Manual de Arquitectura y Teoría Neuronal (Edición 2006)")
 
-    with st.expander("Que es una RNN?", expanded=True):
+    with st.expander("📖 ¿Qué es una Red Neuronal Recurrente (RNN)?", expanded=True):
         st.markdown("""
-Una **Red Neuronal Recurrente** mantiene un estado oculto que actua como memoria:
-
-```
-h_t = tanh(W_h * h_{t-1} + W_x * x_t + b)
-```
-
-Problema: los gradientes se multiplican en cada paso y desaparecen
-si son menores a 1 (vanishing gradient).""")
-
-    with st.expander("Por que LSTM resuelve el vanishing gradient?"):
-        st.markdown("""
-La LSTM introduce tres puertas y un estado de celda `C_t`:
-
-| Puerta | Funcion |
-|--------|---------|
-| Forget | Que olvidar del pasado? |
-| Input  | Que nueva info guardar? |
-| Output | Que parte del estado exponer? |
-
-El estado `C_t` actua como una cinta transportadora:
-el gradiente fluye sin interrupciones a traves del tiempo.""")
-
-    with st.expander("Como funciona la temperatura?"):
-        st.markdown("""
-```
-p_i = exp(log(p_i) / T) / sum(exp(log(p_j) / T))
-```
-
-- **T < 1.0:** distribucion aguda, elige siempre lo mas probable
-- **T = 1.0:** distribucion original del modelo
-- **T > 1.0:** distribucion plana, mayor variedad y riesgo""")
-
-    with st.expander("RNN vs LSTM vs GRU"):
-        st.markdown("""
-| | RNN | LSTM | GRU |
-|---|---|---|---|
-| Memoria larga | Pobre | Excelente | Buena |
-| Velocidad CPU | Rapida | Lenta | Media |
-| Parametros | Pocos | Muchos | Moderados |""")
-
-st.markdown("---")
-st.markdown(
-    "<div style='text-align:center; color:#aaa; font-size:0.8rem;'>"
-    "Generador LSTM - Agentes de IA e Interfaces Multimodales</div>",
-    unsafe_allow_html=True
-)
+Una **RNN** procesa secuencias conservando un estado oculto que funciona como memoria a corto plazo:
