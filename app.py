@@ -25,7 +25,6 @@ st.markdown("""
         background-attachment: fixed;
     }
 
-    /* Contenedores translúcidos tipo Glassmorphism / Aero */
     div.stMarkdown, .css-1r6slb0, div[data-testid="stVerticalBlock"] > div {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
@@ -206,7 +205,6 @@ st.markdown('<h1 class="main-title">AeroQuill™ Studio</h1>', unsafe_allow_html
 st.markdown('<p class="subtitle">Neural Scriptor & Text Synthesis Suite · Frutiger Aero Experience</p>', unsafe_allow_html=True)
 st.markdown("---")
 
-# Banner decorativo tipo panel retro de bienvenida
 col_banner1, col_banner2, col_banner3 = st.columns(3)
 col_banner1.metric("Entorno Gráfico", "AeroGlass™", "Activo")
 col_banner2.metric("Motor Neuronal", "LSTM Recurrente", "v1.4")
@@ -280,7 +278,6 @@ with tab1:
                 m2.metric("Temperatura", f"{temperature:.2f}")
                 m3.metric("Palabras Est.", len(texto.split()))
         else:
-            # Demo interactiva sin modelo
             with st.spinner("🔄 Simulando red neuronal de época..."):
                 time.sleep(0.6)
             demos = {
@@ -341,5 +338,31 @@ with tab3:
     st.markdown("### 📚 Manual de Arquitectura y Teoría Neuronal (Edición 2006)")
 
     with st.expander("📖 ¿Qué es una Red Neuronal Recurrente (RNN)?", expanded=True):
-        st.markdown("""
-Una **RNN** procesa secuencias conservando un estado oculto que funciona como memoria a corto plazo:
+        st.markdown(
+            "Una **RNN** procesa secuencias conservando un estado oculto que funciona como memoria a corto plazo "
+            "mediante ecuaciones de activación recurrente. Su limitación clásica es el problema del desvanecimiento "
+            "del gradiente (*vanishing gradient*) en secuencias muy largas."
+        )
+
+    with st.expander("⚙️ ¿Cómo solucionan las celdas LSTM este problema?"):
+        st.markdown(
+            "Las celdas **LSTM** implementan compuertas de control especializadas:\n\n"
+            "- **Puerta de Olvido:** Decide qué información descartar del contexto anterior.\n"
+            "- **Puerta de Entrada:** Almacena nueva información relevante.\n"
+            "- **Puerta de Salida:** Determina la siguiente respuesta proyectada basándose en la celda de memoria."
+        )
+
+    with st.expander("🔬 Matemática de la Temperatura en Muestreo"):
+        st.markdown(
+            "La temperatura ajusta la distribución de probabilidad de la capa softmax:\n\n"
+            "- **T baja (< 1.0):** Agudiza los picos de probabilidad, haciendo la red más predecible y conservadora.\n"
+            "- **T alta (> 1.0):** Aplana la distribución, permitiendo selecciones creativas, variadas y con mayor factor de sorpresa."
+        )
+
+st.markdown("---")
+st.markdown(
+    "<div style='text-align:center; color:#003366; font-size:0.85rem; font-weight: bold;'>"
+    "AeroQuill™ Studio 2006 — Diseñado con Estética Frutiger Aero para el Curso de Agentes de IA e Interfaces Multimodales."
+    "</div>",
+    unsafe_allow_html=True
+)
